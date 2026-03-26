@@ -4,6 +4,20 @@ Astronomical clock for **Android TV** and **Apple TV** — a Flutter port of the
 
 Real solar shadows using the NOAA/Meeus algorithm. Background, colours, and lighting shift throughout the day.
 
+## Features
+
+- Real astronomical solar position (azimuth + altitude)
+- 60-step penumbra shadow rendering via `CustomPainter`
+- Altitude-driven shadow colour temperature (warm amber → cool blue-grey)
+- Ambient occlusion contact shadow
+- Volumetric highlight on the lit edge of the numeral
+- Day/night palette blending (night → sunrise → day → sunset → night)
+- Radial gradient background tracks celestial position
+- Minute orbiting dot
+- Time simulation slider (scrub through 24h)
+- Immersive fullscreen, landscape-locked
+- Manual location entry (TV-friendly)
+
 ## Project structure
 
 ```
@@ -92,17 +106,3 @@ Flutter does not officially support tvOS. Use the community [`flutter_tvos`](htt
 TV devices don't have GPS. The app shows a **"TAP TO SET LOCATION"** prompt in the top-right corner. Enter latitude and longitude manually — use Google Maps or your phone's location settings.
 
 Without coordinates, the clock falls back to a time-based shadow arc (same behaviour as the web app when geolocation is denied).
-
-## Features
-
-- Real astronomical solar position (azimuth + altitude)
-- 60-step penumbra shadow rendering via `CustomPainter`
-- Altitude-driven shadow colour temperature (warm amber → cool blue-grey)
-- Ambient occlusion contact shadow
-- Volumetric highlight on the lit edge of the numeral
-- Day/night palette blending (night → sunrise → day → sunset → night)
-- Radial gradient background tracks celestial position
-- Minute orbiting dot
-- Time simulation slider (scrub through 24h)
-- Immersive fullscreen, landscape-locked
-- Manual location entry (TV-friendly)
