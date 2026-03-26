@@ -1,0 +1,94 @@
+default_platform(:ios)
+
+ASC_KEY_ID     = "47X9253FF9"
+ASC_ISSUER_ID  = "61c79396-84bb-4051-874f-0ad111007b4a"
+ASC_KEY_PATH   = File.expand_path("~/.private_keys/AuthKey_47X9253FF9.p8")
+TEAM_ID        = "UGM4QHBM9W"
+BUNDLE_ID      = "com.connectio.sundial"
+APP_ID         = "com.sundial.sundial_tv"
+PLAY_KEY       = "/Users/home/Library/CloudStorage/GoogleDrive-sgardoll@gmail.com/My Drive/APPS/PLAY CONSOLE DEVELOPER SERVICE ACCOUNT/pc-api-6683764265058024430-723-c270d9d0b285.json"
+PROJECT_ROOT   = File.expand_path("..", __dir__)
+
+def asc_api_key
+  app_store_connect_api_key(
+    key_id:       ASC_KEY_ID,
+    issuer_id:    ASC_ISSUER_ID,
+    key_filepath: ASC_KEY_PATH,
+    duration:     1200,
+    in_house:     false
+  )
+end
+
+# ══════════════════════════════════════════════════════════════════════════════
+platform :ios do
+# ══════════════════════════════════════════════════════════════════════════════
+
+  desc "Build and submit Sundial to App Store Connect (tvOS)"
+  lane :submit_tvos do
+    api_key = asc_api_key
+
+    # Sync distribution provisioning profile for tvOS
+    sigh(
+      api_key:        api_key,
+      app_identifier: BUNDLE_ID,
+      platform:       "tvos",
+      output_path:    "/tmp",
+      force:          true
+    )
+
+    # Build tvOS IPA
+    Dir.chdir(PROJECT_ROOT) do
+      sh("flutter build ipa --release --export-options-plist=ios/ExportOptions.plist")
+    end
+
+    ipa_path = Dir["#{PROJECT_ROOT}/build/ios/ipa/*.ipa"].first
+    UI.user_error!("No IPA found") unless ipa_path
+    UI.success("IPA: #{ipa_path}")
+
+    # Upload to App Store Connect
+    upload_to_app_store(
+      api_key:           api_key,
+      ipa:               ipa_path,
+      platform:          "appletvos",
+      submit_for_review: false,
+      force:             true,
+      skip_metadata:     true,
+      skip_screenshots:  true
+    )
+
+    UI.success("✅ tvOS build uploaded to App Store Connect")
+  end
+
+end
+
+# ══════════════════════════════════════════════════════════════════════════════
+platform :android do
+# ══════════════════════════════════════════════════════════════════════════════
+
+  desc "Build and submit Sundial AAB to Google Play internal track"
+  lane :submit_android_tv do
+    Dir.chdir(PROJECT_ROOT) do
+      sh("flutter build appbundle --release")
+    end
+
+    aab_path = "#{PROJECT_ROOT}/build/app/outputs/bundle/release/app-release.aab"
+    UI.user_error!("No AAB at #{aab_path}") unless File.exist?(aab_path)
+    UI.success("AAB: #{aab_path} (#{(File.size(aab_path)/1024.0/1024.0).round(1)} MB)")
+
+    upload_to_play_store(
+      package_name:             APP_ID,
+      aab:                      aab_path,
+      track:                    "internal",
+      release_status:           "draft",
+      json_key:                 PLAY_KEY,
+      skip_upload_apk:          true,
+      skip_upload_metadata:     true,
+      skip_upload_changelogs:   true,
+      skip_upload_images:       true,
+      skip_upload_screenshots:  true
+    )
+
+    UI.success("✅ Android TV AAB uploaded to Play Console (internal track)")
+  end
+
+end
