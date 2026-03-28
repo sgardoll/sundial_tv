@@ -5,7 +5,7 @@ ASC_ISSUER_ID  = "61c79396-84bb-4051-874f-0ad111007b4a"
 ASC_KEY_PATH   = File.expand_path("~/.private_keys/AuthKey_47X9253FF9.p8")
 TEAM_ID        = "UGM4QHBM9W"
 BUNDLE_ID      = "com.connectio.sundial"
-APP_ID         = "com.sundial.sundial_tv"
+APP_ID         = "com.connectio.sundial"
 PLAY_KEY       = "/Users/home/Library/CloudStorage/GoogleDrive-sgardoll@gmail.com/My Drive/APPS/PLAY CONSOLE DEVELOPER SERVICE ACCOUNT/pc-api-6683764265058024430-723-c270d9d0b285.json"
 PROJECT_ROOT   = File.expand_path("..", __dir__)
 
@@ -36,11 +36,7 @@ platform :ios do
       force:          true
     )
 
-    # Build tvOS IPA
-    Dir.chdir(PROJECT_ROOT) do
-      sh("flutter build ipa --release --export-options-plist=ios/ExportOptions.plist")
-    end
-
+    # Use pre-built tvOS IPA (built via xcodebuild archive + exportArchive)
     ipa_path = Dir["#{PROJECT_ROOT}/build/ios/ipa/*.ipa"].first
     UI.user_error!("No IPA found") unless ipa_path
     UI.success("IPA: #{ipa_path}")

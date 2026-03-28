@@ -68,6 +68,37 @@ _Palette _paletteForT(double t) {
   return _night;
 }
 
+// ── Font helper ────────────────────────────────────────────────────────────
+
+/// Build a Playfair Display style with a safe fallback chain.
+/// google_fonts downloads at runtime which can fail on tvOS (no network
+/// in simulator, restrictive ATS on device).  We bundle the fonts as
+/// assets under assets/google_fonts/ so they load locally first.
+TextStyle _playfairStyle({
+  required double fontSize,
+  required Color color,
+}) {
+  return GoogleFonts.playfairDisplay(
+    fontSize: fontSize,
+    fontWeight: FontWeight.w900,
+    color: color,
+    height: 1.0,
+  );
+}
+
+/// JetBrains Mono with fallback
+TextStyle _monoStyle({
+  required Color color,
+  required double fontSize,
+  double letterSpacing = 0,
+}) {
+  return GoogleFonts.jetBrainsMono(
+    color: color,
+    fontSize: fontSize,
+    letterSpacing: letterSpacing,
+  );
+}
+
 // ── Geolocation state ──────────────────────────────────────────────────────
 
 enum _GeoStatus { idle, fetching, granted, denied, unavailable }
@@ -274,11 +305,9 @@ class _SundialScreenState extends State<SundialScreen>
 
     // ── Text style ────────────────────────────────────────────────────────────
     final fontSize = MediaQuery.of(context).size.shortestSide * 0.45;
-    final playfair = GoogleFonts.playfairDisplay(
+    final playfair = _playfairStyle(
       fontSize: fontSize,
-      fontWeight: FontWeight.w900,
       color: palette.text,
-      height: 1.0,
     );
 
     return Scaffold(
@@ -344,7 +373,7 @@ class _SundialScreenState extends State<SundialScreen>
                   children: [
                     Text(
                       'Simulated: $simDisplay',
-                      style: GoogleFonts.jetBrainsMono(
+                      style: _monoStyle(
                           color: palette.text, fontSize: 14),
                     ),
                     const SizedBox(height: 8),
@@ -373,7 +402,7 @@ class _SundialScreenState extends State<SundialScreen>
                       setState(() => _isSimulating = !_isSimulating),
                   child: AnimatedDefaultTextStyle(
                     duration: const Duration(milliseconds: 1000),
-                    style: GoogleFonts.jetBrainsMono(
+                    style: _monoStyle(
                       color: palette.text,
                       fontSize: 12,
                       letterSpacing: 2,
@@ -400,7 +429,7 @@ class _SundialScreenState extends State<SundialScreen>
                       : null,
                   child: AnimatedDefaultTextStyle(
                     duration: const Duration(milliseconds: 1000),
-                    style: GoogleFonts.jetBrainsMono(
+                    style: _monoStyle(
                       color: palette.text.withValues(alpha: 0.5),
                       fontSize: 11,
                       letterSpacing: 1,

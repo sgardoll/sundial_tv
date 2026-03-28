@@ -1,0 +1,32 @@
+name: Runner
+options:
+  bundleIdPrefix: com.connectio
+  deploymentTarget:
+    tvOS: "15.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SDKROOT: appletvos
+    SUPPORTED_PLATFORMS: "appletvsimulator appletvos"
+    TARGETED_DEVICE_FAMILY: "3"
+    DEVELOPMENT_TEAM: UGM4QHBM9W
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "4"
+    CODE_SIGN_STYLE: Automatic
+    ASSETCATALOG_COMPILER_APPICON_NAME: "App Icon & Top Shelf Image"
+    SWIFT_VERSION: "5.0"
+
+targets:
+  Runner:
+    type: application
+    platform: tvOS
+    sources:
+      - path: Runner
+        excludes:
+          - "**/.DS_Store"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.connectio.sundial
+        INFOPLIST_FILE: Runner/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
