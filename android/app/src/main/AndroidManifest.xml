@@ -20,7 +20,7 @@
         android:icon="@mipmap/ic_launcher"
         android:banner="@drawable/ic_banner">
         <activity
-            android:name=".MainActivity"
+            android:name="com.sundial.sundial_tv.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:taskAffinity=""
