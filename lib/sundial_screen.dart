@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:math' as math;
 
+import 'platform_util.dart';
 import 'solar_position.dart';
 import 'sundial_painter.dart';
 
@@ -328,12 +329,13 @@ class _SundialScreenState extends State<SundialScreen>
         child: Stack(
           children: [
             // ── Noise texture ──────────────────────────────────────────────
-            Positioned.fill(
-              child: Opacity(
-                opacity: 0.04,
-                child: CustomPaint(painter: _NoisePainter()),
+            if (!isAndroidTV)
+              Positioned.fill(
+                child: Opacity(
+                  opacity: 0.04,
+                  child: CustomPaint(painter: _NoisePainter()),
+                ),
               ),
-            ),
 
             // ── Numeral + shadows ──────────────────────────────────────────
             Positioned.fill(
