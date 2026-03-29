@@ -115,8 +115,8 @@ class SundialPainter extends CustomPainter {
     // ── 2. Directional penumbra ────────────────────────────────────────────
     // 60 blurred saveLayer calls per frame is fine on Apple TV (Metal) but
     // catastrophic on Android TV chipsets (weak OpenGL / Mali / PowerVR).
-    // Use 10 steps on Android TV — still looks good at living-room distance.
-    final numSteps = isAndroidTV ? 10 : 60;
+    // Use 24 steps on Android TV — smooth enough to avoid visible banding.
+    final numSteps = isAndroidTV ? 24 : 60;
     for (int i = 1; i <= numSteps; i++) {
       final progress = i / numSteps;
       final easeProgress = 1 - math.pow(1 - progress, 2.5);
