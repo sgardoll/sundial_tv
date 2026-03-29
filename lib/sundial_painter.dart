@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'platform_util.dart';
 
 /// Paints the 60-step penumbra shadow and volumetric highlight on the
 /// hour numeral — a direct port of the CSS text-shadow logic in page.tsx.
@@ -111,8 +112,11 @@ class SundialPainter extends CustomPainter {
         aoColor.withValues(alpha: (0.7 * opacityMultiplier).clamp(0, 1)),
         0.025 * vmin);
 
-    // ── 2. Directional penumbra (60 steps) ──────────────────────────────────
-    const numSteps = 60;
+    // ── 2. Directional penumbra ────────────────────────────────────────────
+    // 60 blurred saveLayer calls per frame is fine on Apple TV (Metal) but
+    // catastrophic on Android TV chipsets (weak OpenGL / Mali / PowerVR).
+    // Use 10 steps on Android TV — still looks good at living-room distance.
+    final numSteps = isAndroidTV ? 10 : 60;
     for (int i = 1; i <= numSteps; i++) {
       final progress = i / numSteps;
       final easeProgress = 1 - math.pow(1 - progress, 2.5);
