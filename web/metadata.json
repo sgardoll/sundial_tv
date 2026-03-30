@@ -1,0 +1,5 @@
+{
+  "name": "Sundial",
+  "description": "A digital clock that casts a realistic sundial shadow based on the current time of day.",
+  "requestFramePermissions": []
+}
