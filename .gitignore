@@ -1,45 +1,43 @@
-# Miscellaneous
-*.class
-*.log
-*.pyc
-*.swp
+# OS
 .DS_Store
-.atom/
-.build/
-.buildlog/
-.history
-.svn/
-.swiftpm/
-migrate_working_dir/
 
-# IntelliJ related
-*.iml
-*.ipr
-*.iws
+# IDE
 .idea/
+.vscode/
+*.iml
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
+# Logs
+*.log
 
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
-.dart_tool/
-.flutter-plugins-dependencies
-.pub-cache/
-.pub/
-/build/
-/coverage/
+# Agent tooling
+.bg-shell/
+.claude/
+.gsd/
 
-# Symbolication related
-app.*.symbols
+# Web (Next.js)
+web/node_modules/
+web/.next/
+web/out/
+web/coverage/
+web/.env*
+!web/.env.example
+web/tsconfig.tsbuildinfo
 
-# Obfuscation related
-app.*.map.json
-
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
+# TV (Flutter)
+tv/build/
+tv/.dart_tool/
+tv/.flutter-plugins
+tv/.flutter-plugins-dependencies
+tv/.metadata
+tv/pubspec.lock
+tv/android/.gradle/
+tv/android/local.properties
+tv/android/key.properties
+tv/android/keystore/
+tv/ios/build/
+tv/ios/Pods/
+tv/ios/Podfile.lock
+tv/ios/Flutter/ephemeral/
+tv/ios/Flutter/Generated.xcconfig
+tv/ios/Flutter/flutter_export_environment.sh
+tv/fastlane/report.xml
