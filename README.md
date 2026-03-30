@@ -1,6 +1,6 @@
 # Sundial TV
 
-Astronomical clock for **Android TV** and **Apple TV** — a Flutter port of the [Sundial web app](../sundial).
+Astronomical clock for **Android TV**, **Apple TV**, and all **Android** devices — a Flutter port of the [Sundial web app](../sundial).
 
 Real solar shadows using the NOAA/Meeus algorithm. Background, colours, and lighting shift throughout the day.
 
@@ -17,6 +17,7 @@ Real solar shadows using the NOAA/Meeus algorithm. Background, colours, and ligh
 - Time simulation slider (scrub through 24h)
 - Immersive fullscreen, landscape-locked
 - Manual location entry (TV-friendly)
+- **Android screensaver (Daydream)** — registers as a system `DreamService` on all Android devices (TV, phone, tablet, Chromebook)
 
 ## Project structure
 
@@ -40,12 +41,13 @@ flutter run -d <android-device-id>
 flutter run -d <ios-device-id>
 ```
 
-## Android TV
+## Android
 
-The `AndroidManifest.xml` already includes:
+The `AndroidManifest.xml` includes:
 - `LEANBACK_LAUNCHER` intent filter — app appears on Android TV home screen
-- `android.software.leanback` feature declaration — required for Google Play TV tab
+- `android.software.leanback` feature (optional) — eligible for Play Store TV tab without excluding phones/tablets
 - `android.hardware.touchscreen required="false"` — standard for TV apps
+- `DreamService` screensaver — works on all Android devices (API 17+)
 
 **Build APK:**
 ```bash
@@ -61,6 +63,46 @@ flutter build appbundle --release
 ### D-pad navigation
 - **Select / OK** → opens location entry dialog
 - **Slider** — use arrow keys once slider is focused
+
+### Screensaver (Daydream / DreamService)
+
+Sundial registers as a system screensaver via Android's `DreamService` on **all Android devices** — phones, tablets, Chromebooks, and Android TV. When activated, it displays the clock in a clean ambient mode with no interactive controls.
+
+#### Phones & tablets
+
+Go to **Settings → Display → Screen saver** (or **Daydream** on older versions), select **Sundial**, and choose when to activate (while charging, while docked, or either).
+
+#### Chromebooks
+
+**Settings → Device → Display → Screen saver** → select **Sundial**.
+
+#### Android TV / Google TV
+
+**On older devices (pre-Android TV 12):** Go to **Settings → Display → Screensaver** and select **Sundial** from the list.
+
+**On Google TV / Android TV 12+:** The system UI no longer exposes third-party screensaver selection. Use ADB instead:
+
+```bash
+# Connect to your TV
+adb connect <tv-ip-address>
+
+# Set Sundial as the default screensaver
+adb shell settings put secure screensaver_components com.connectio.sundial/com.sundial.sundial_tv.SundialDreamService
+
+# Set screensaver timeout (e.g. 5 minutes = 300000ms)
+adb shell settings put system screen_off_timeout 300000
+
+# Test the screensaver immediately
+adb shell am start -n com.connectio.sundial/com.sundial.sundial_tv.SundialDreamService
+
+# Verify current screensaver setting
+adb shell settings get secure screensaver_components
+```
+
+To restore the default screensaver:
+```bash
+adb shell settings delete secure screensaver_components
+```
 
 ## Apple TV (tvOS)
 

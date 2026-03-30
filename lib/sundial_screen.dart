@@ -107,7 +107,8 @@ enum _GeoStatus { idle, fetching, granted, denied, unavailable }
 // ── Main widget ────────────────────────────────────────────────────────────
 
 class SundialScreen extends StatefulWidget {
-  const SundialScreen({super.key});
+  final bool isScreensaver;
+  const SundialScreen({super.key, this.isScreensaver = false});
 
   @override
   State<SundialScreen> createState() => _SundialScreenState();
@@ -328,7 +329,7 @@ class _SundialScreenState extends State<SundialScreen>
         ),
         child: Stack(
           children: [
-            // ── Noise texture ──────────────────────────────────────────────
+            // ── Noise texture (skip on TV chipsets — too GPU-heavy) ──────
             if (!isAndroidTV)
               Positioned.fill(
                 child: Opacity(
@@ -366,7 +367,7 @@ class _SundialScreenState extends State<SundialScreen>
             ),
 
             // ── Simulation slider ──────────────────────────────────────────
-            if (_isSimulating)
+            if (_isSimulating && !widget.isScreensaver)
               Positioned(
                 bottom: MediaQuery.of(context).size.height * 0.15,
                 left: MediaQuery.of(context).size.width * 0.25,
@@ -394,33 +395,34 @@ class _SundialScreenState extends State<SundialScreen>
               ),
 
             // ── Toggle button ──────────────────────────────────────────────
-            Positioned(
-              bottom: MediaQuery.of(context).size.height * 0.04,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: GestureDetector(
-                  onTap: () =>
-                      setState(() => _isSimulating = !_isSimulating),
-                  child: AnimatedDefaultTextStyle(
-                    duration: const Duration(milliseconds: 1000),
-                    style: _monoStyle(
-                      color: palette.text,
-                      fontSize: 12,
-                      letterSpacing: 2,
-                    ),
-                    child: Text(
-                      _isSimulating
-                          ? 'BACK TO REAL TIME'
-                          : now.toString().substring(11, 16),
+            if (!widget.isScreensaver)
+              Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.04,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: GestureDetector(
+                    onTap: () =>
+                        setState(() => _isSimulating = !_isSimulating),
+                    child: AnimatedDefaultTextStyle(
+                      duration: const Duration(milliseconds: 1000),
+                      style: _monoStyle(
+                        color: palette.text,
+                        fontSize: 12,
+                        letterSpacing: 2,
+                      ),
+                      child: Text(
+                        _isSimulating
+                            ? 'BACK TO REAL TIME'
+                            : now.toString().substring(11, 16),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
 
             // ── Location status (top-right, auto — no manual entry) ────────
-            if (_geoStatus != _GeoStatus.granted && _geoStatus != _GeoStatus.idle)
+            if (!widget.isScreensaver && _geoStatus != _GeoStatus.granted && _geoStatus != _GeoStatus.idle)
               Positioned(
                 top: 24,
                 right: 32,

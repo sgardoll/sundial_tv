@@ -3,8 +3,11 @@ import 'package:flutter/services.dart';
 import 'platform_util.dart';
 import 'sundial_screen.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Resolve platform (TV vs phone/tablet) before building the UI.
+  await resolvePlatform();
 
   // tvOS doesn't support orientation locking or immersive mode —
   // those calls silently hang the Flutter engine on Apple TV.
@@ -31,7 +34,13 @@ class SundialApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
         useMaterial3: true,
       ),
-      home: const SundialScreen(),
+      initialRoute: '/',
+      onGenerateRoute: (settings) {
+        final isScreensaver = settings.name == '/screensaver';
+        return MaterialPageRoute(
+          builder: (_) => SundialScreen(isScreensaver: isScreensaver),
+        );
+      },
     );
   }
 }
