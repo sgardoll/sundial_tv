@@ -1,5 +1,7 @@
 # Sundial
 
+https://github.com/user-attachments/assets/fd63e7bb-d165-4640-8aee-8e78bfc3eb64
+
 An astronomical clock with real solar shadows. The numeral, background, colours, and lighting shift throughout the day based on the actual position of the sun.
 
 ## Projects
